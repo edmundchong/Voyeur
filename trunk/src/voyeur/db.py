@@ -116,8 +116,12 @@ class Persistor(object):
         trial_group._v_attrs.trialIndex = len(session_group.Trials)
         #print parameters
         for key, value in trial_parameters.items():
-            #print key, value
-            parameters[key] = value
+            #in pattern stimulation, the number of variables passed to arduino differs trial to trial
+            #this leads to problems in adding the variable to the db file, so we just omit those variables entirely
+            try: 
+                parameters[key] = value
+            except Exception, e:
+                pass
         parameters.append()
         session_group.Trials.flush()
         self.h5file.flush()
